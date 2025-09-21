@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RRRR - Waste Management App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f9; }
+    header { background: #2e7d32; color: #fff; padding: 15px; text-align: center; }
+    nav { background: #1b5e20; padding: 10px; text-align: center; }
+    nav a { color: #fff; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    .container { padding: 20px; }
+    .card { background: #fff; padding: 20px; margin: 20px 0; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    button { background: #2e7d32; color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #1b5e20; }
+    footer { background: #2e7d32; color: #fff; text-align: center; padding: 10px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RRRR - Recycle · Reuse · Rebin · Rewards</h1>
+    <p>Real Life Waste Management Solution</p>
+  </header>  <nav>
+    <a href="#home">Home</a>
+    <a href="#deposit">Deposit Waste</a>
+    <a href="#report">Report Waste</a>
+    <a href="#rewards">My Rewards</a>
+    <a href="#about">About Us</a>
+  </nav>  <div class="container" id="home">
+    <div class="card">
+      <h2>Welcome Citizen 👋</h2>
+      <p>This is a prototype of our waste management app for SIH 2025. Citizens can deposit recyclable waste, report roadside waste, and earn rewards instantly!</p>
+    </div>
+  </div>  <div class="container" id="deposit">
+    <div class="card">
+      <h2>Deposit Waste</h2>
+      <label>Waste Type: </label>
+      <select id="wasteType">
+        <option value="Plastic">Plastic</option>
+        <option value="Paper">Paper</option>
+        <option value="Metal">Metal</option>
+        <option value="Glass">Glass</option>
+      </select><br><br>
+      <label>Quantity (kg): </label>
+      <input type="number" id="quantity" placeholder="Enter kg"><br><br>
+      <button onclick="calculateReward()">Submit</button>
+      <p id="depositResult"></p>
+    </div>
+  </div>  <div class="container" id="report">
+    <div class="card">
+      <h2>Report Roadside Waste</h2>
+      <p>Upload a photo and location to notify municipality staff.</p>
+      <input type="file"><br><br>
+      <button onclick="reportWaste()">Submit Report</button>
+      <p id="reportResult"></p>
+    </div>
+  </div>  <div class="container" id="rewards">
+    <div class="card">
+      <h2>My Rewards</h2>
+      <p id="rewardPoints">Total Points: 0</p>
+    </div>
+  </div>  <div class="container" id="about">
+    <div class="card">
+      <h2>About Us</h2>
+      <p><b>Team RRRR</b> is a 6-member team solving SIH Problem Statement 25060 – Real life solutions for waste management. Our idea motivates citizens to recycle waste and report unclean areas by giving digital rewards.</p>
+    </div>
+  </div>  <footer>
+    <p>© 2025 Team RRRR | SIH Prototype</p>
+  </footer>  <script>
+    let totalPoints = 0;
+    function calculateReward() {
+      let qty = document.getElementById("quantity").value;
+      if(qty > 0) {
+        let reward = qty * 5; // 5 points per kg
+        totalPoints += reward;
+        document.getElementById("depositResult").innerText = `✅ You deposited ${qty} kg waste. Reward: ${reward} points.`;
+        document.getElementById("rewardPoints").innerText = `Total Points: ${totalPoints}`;
+      } else {
+        alert("Please enter quantity");
+      }
+    }
+
+    function reportWaste() {
+      totalPoints += 2; // fixed points for reporting
+      document.getElementById("reportResult").innerText = "✅ Report submitted successfully. Staff will verify.";
+      document.getElementById("rewardPoints").innerText = `Total Points: ${totalPoints}`;
+    }
+  </script></body>
+</html>
