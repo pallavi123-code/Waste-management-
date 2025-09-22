@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team 4R - Smart Waste Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+    }
+    header {
+      background: #2e8b57;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #1c5f3e;
+    }
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      background: #145a32;
+    }
+    section {
+      padding: 20px;
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      max-width: 600px;
+      margin: auto;
+    }
+    button {
+      background: #2e8b57;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #256d46;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    video {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Team 4R</h1>
+    <p>Recycle • Reuse • Rebin • Rewards</p>
+  </header>
+
+  <nav>
+    <a href="#" onclick="showSection('home')">Home</a>
+    <a href="#" onclick="showSection('register')">Register</a>
+    <a href="#" onclick="showSection('report')">Report Waste</a>
+    <a href="#" onclick="showSection('deposit')">Deposit Waste</a>
+    <a href="#" onclick="showSection('rewards')">Rewards</a>
+    <a href="#" onclick="showSection('guide')">Video Guide</a>
+    <a href="#" onclick="showSection('about')">About</a>
+  </nav>
+
+  <!-- Home -->
+  <section id="home" class="active">
+    <div class="card">
+      <h2>Welcome to Smart Waste Management</h2>
+      <p>
+        Our project helps citizens register, report waste, deposit recyclable items, and earn rewards.  
+        Special video guides help people who cannot read.
+      </p>
+    </div>
+  </section>
+
+  <!-- Registration -->
+  <section id="register">
+    <div class="card">
+      <h2>Citizen Registration</h2>
+      <form onsubmit="registerCitizen(event)">
+        <label>Citizen ID:</label>
+        <input type="text" id="citizenId" required><br>
+        <label>Name:</label>
+        <input type="text" id="citizenName" required><br>
+        <label>Address:</label>
+        <input type="text" id="citizenAddress" required><br>
+        <label>Mobile Number:</label>
+        <input type="tel" id="citizenMobile" required><br>
+        <button type="submit">Register</button>
+      </form>
+      <p id="registerMsg" style="color:green; font-weight:bold;"></p>
+    </div>
+  </section>
+
+  <!-- Report Waste -->
+  <section id="report">
+    <div class="card">
+      <h2>Report Waste</h2>
+      <form>
+        <label>Upload Photo:</label>
+        <input type="file" accept="image/*"><br>
+        <label>Location:</label>
+        <input type="text" id="location" placeholder="Fetching location..." readonly>
+        <button type="button" onclick="getLocation()">Get Location</button><br><br>
+        <button type="submit">Submit Report</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Deposit Waste -->
+  <section id="deposit">
+    <div class="card">
+      <h2>Deposit Waste</h2>
+      <form onsubmit="calculateReward(event)">
+        <label>Citizen ID:</label>
+        <input type="text" required><br>
+        <label>Type of Waste:</label>
+        <select id="wasteType">
+          <option value="plastic">Plastic</option>
+          <option value="paper">Paper</option>
+          <option value="metal">Metal</option>
+          <option value="ewaste">E-Waste</option>
+        </select><br>
+        <label>Quantity (kg):</label>
+        <input type="number" id="quantity" min="1" required><br>
+        <button type="submit">Deposit</button>
+      </form>
+      <p id="rewardMsg" style="color:green; font-weight:bold;"></p>
+    </div>
+  </section>
+
+  <!-- Rewards -->
+  <section id="rewards">
+    <div class="card">
+      <h2>Your Rewards</h2>
+      <p>Total Points: <span id="totalPoints">0</span> 🏆</p>
+    </div>
+  </section>
+
+  <!-- Video Guide for Uneducated People -->
+  <section id="guide">
+    <div class="card">
+      <h2>Video Guide 🎥</h2>
+      <p>Watch this video to learn how to deposit waste and earn rewards.</p>
+      <video controls>
+        <source src="waste_guide.mp4" type="video/mp4">
+        Your browser does not support video.
+      </video>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="card">
+      <h2>About Team 4R</h2>
+      <p>
+        We are a team of innovators solving waste management issues.  
+        Our system motivates citizens to recycle by rewarding them and helps uneducated persons using video instructions.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    let totalPoints = 0;
+
+    function showSection(sectionId) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(sectionId).classList.add("active");
+    }
+
+    function calculateReward(event) {
+      event.preventDefault();
+      let qty = parseInt(document.getElementById("quantity").value);
+      let points = qty * 10; // 10 points per kg
+      totalPoints += points;
+      document.getElementById("rewardMsg").innerText = 
+        `You earned ${points} points!`;
+      document.getElementById("totalPoints").innerText = totalPoints;
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          document.getElementById("location").value =
+            pos.coords.latitude + ", " + pos.coords.longitude;
+        });
+      } else {
+        document.getElementById("location").value = "Geolocation not supported";
+      }
+    }
+
+    function registerCitizen(event) {
+      event.preventDefault();
+      let id = document.getElementById("citizenId").value;
+      let name = document.getElementById("citizenName").value;
+      document.getElementById("registerMsg").innerText =
+        `Citizen ${name} (ID: ${id}) registered successfully! ✅`;
+    }
+  </script>
+
+</body>
+</html>
